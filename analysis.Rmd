@@ -64,7 +64,7 @@ merged_clean3 <- merged_clean2  %>%
  left_join(  y = merged_clean2[,3:4], by = "location_id") %>%
    filter (! duplicated(location_id))
 
-graph1 <- ggplot(merged_clean3, aes(x = Nurses_midwives, y =  Deaths , label = location_name)) +
+graph1 <- ggplot(merged_clean3, aes(x = Nurses_midwives, y =  coverage , label = location_name)) +
   geom_point() +
   geom_text(size = 3, check_overlap = TRUE, hjust = 0.1, nudge_x = 0.5)
 graph1
@@ -94,13 +94,14 @@ correlation_matrix2 <- round( cor(merged_corr2), 3)
 
 # P-value matrix  
  p.mat <- cor.mtest(merged_corr)
+ p.mat2 <- cor.mtest(merged_corr2)
  
 # visualise correlation 
  corrplot(corr = correlation_matrix, type = "full" ,
           tl.col="black", tl.srt=45,
           p.mat = p.mat, sig.level = 0.05, insig = "blank" )
  
- corrplot(corr = correlation_matrix2, type = "full" ,
+ corrplot(corr = correlation_matrix2, type = "upper" ,
           tl.col="black", tl.srt=45, tl.cex = 1,
           p.mat = p.mat, sig.level = 0.05, insig = "blank" )
 
