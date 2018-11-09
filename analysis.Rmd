@@ -21,13 +21,13 @@ library(tidyverse)
 ```{r}
 # importing data 
 
-GBD_HIV <- read_excel("Documents/MPH Brown /2018 Fall PHP 1100/Data analysis/project/data/Book2.xlsx", 
+GBD_HIV <- read_excel("/Users/battou/Documents/MPH Brown /2018 Fall PHP 1100/Data analysis/project/data/Book2.xlsx", 
                       sheet = "Sheet2", col_types = c("numeric", 
                                                       "text", "numeric", "text", "blank", 
                                                       "blank", "blank", "blank", "blank", 
                                                       "text", "blank", "text", "numeric", 
                                                       "numeric", "numeric", "numeric"))
-health_work_force <- read_excel("Documents/MPH Brown /2018 Fall PHP 1100/Data analysis/project/data/Book2.xlsx", 
+health_work_force <- read_excel("/Users/battou/Documents/MPH Brown /2018 Fall PHP 1100/Data analysis/project/data/Book2.xlsx", 
                                 sheet = "Sheet1")
 names(health_work_force )[1] <- c("location_name")
 
