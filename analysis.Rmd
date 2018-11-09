@@ -14,6 +14,7 @@ knitr::opts_chunk$set(echo = TRUE)
 # open needed libraries 
 library(readxl)
 library(tidyverse)
+library(ggpubr)
 
 
 ```
@@ -38,6 +39,25 @@ names(health_work_force )[1] <- c("location_name")
 
 merged <- left_join( x = GBD_HIV, y = health_work_force, by = "location_name" )
 merged_clean <- merged[complete.cases(merged),]
+names(merged_clean)[12] <- c("Nurses_midwives")
+names(merged_clean)[14] <- c("Doctors_equivalents")
+colnames(merged_clean)
 ```
 
+```{r}
+# correlation
+merged_corr <- merged_clean %>%
+  select(location_id, measure_name, val,Doctors,Nurses_midwives, Total, Doctors_equivalents) %>%
+  spread(key = measure_name, val)
+ round( cor(merged_corr), 3)
 
+
+merged_clean %>%
+  filter(measure_name == "Deaths") %>%
+  ggscatter( x = "Nurses_midwives", y = "val",
+            add = "reg.line", conf.int = TRUE, 
+            cor.coef = TRUE, cor.method = "pearson",
+            xlab =  "Estimated Doctors Density per 1000", ylab = "HIV Mortality rate per 100 0000")
+
+
+```
