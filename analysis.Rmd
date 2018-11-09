@@ -1,0 +1,43 @@
+---
+title: "Untitled"
+author: "NAudi"
+date: "11/8/2018"
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+  
+```
+
+```{r}
+# open needed libraries 
+library(readxl)
+library(tidyverse)
+
+
+```
+
+```{r}
+# importing data 
+
+GBD_HIV <- read_excel("Documents/MPH Brown /2018 Fall PHP 1100/Data analysis/project/data/Book2.xlsx", 
+                      sheet = "Sheet2", col_types = c("numeric", 
+                                                      "text", "numeric", "text", "blank", 
+                                                      "blank", "blank", "blank", "blank", 
+                                                      "text", "blank", "text", "numeric", 
+                                                      "numeric", "numeric", "numeric"))
+health_work_force <- read_excel("Documents/MPH Brown /2018 Fall PHP 1100/Data analysis/project/data/Book2.xlsx", 
+                                sheet = "Sheet1")
+names(health_work_force )[1] <- c("location_name")
+
+```
+
+```{r}
+# merging and cleaning data
+
+merged <- left_join( x = GBD_HIV, y = health_work_force, by = "location_name" )
+merged_clean <- merged[complete.cases(merged),]
+```
+
+
