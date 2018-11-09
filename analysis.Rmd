@@ -58,8 +58,16 @@ colnames(merged_clean2)
 ```
 ```{r}
 # descriptive analysis 
+merged_clean3 <- merged_clean2  %>%
+   select(location_id, measure_name, val,Doctors,Nurses_midwives, Total, coverage) %>%
+  spread(key = measure_name, val) %>%
+ left_join(  y = merged_clean2[,3:4], by = "location_id") %>%
+   filter (! duplicated(location_id))
 
-
+graph1 <- ggplot(merged_clean3, aes(x = Nurses_midwives, y =  Deaths , label = location_name)) +
+  geom_point() +
+  geom_text(size = 3, check_overlap = TRUE, hjust = 0.1, nudge_x = 0.5)
+graph1
 
 
 ```
@@ -78,7 +86,11 @@ merged_corr2 <- merged_clean2  %>%
   spread(key = measure_name, val) %>%
   filter( !is.na(coverage))
 
+#  export to csv
+write_csv(merged_corr2, path = "/Users/battou/Documents/MPH Brown /2018 Fall PHP 1100/Data analysis/project/data/results.csv")
+
 correlation_matrix2 <- round( cor(merged_corr2), 3)
+
 
 # P-value matrix  
  p.mat <- cor.mtest(merged_corr)
