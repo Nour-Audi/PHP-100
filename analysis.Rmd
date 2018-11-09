@@ -29,9 +29,16 @@ GBD_HIV <- read_excel("/Users/battou/Documents/MPH Brown /2018 Fall PHP 1100/Dat
                                                       "blank", "blank", "blank", "blank", 
                                                       "text", "blank", "text", "numeric", 
                                                       "numeric", "numeric", "numeric"))
+# importing health work force data
 health_work_force <- read_excel("/Users/battou/Documents/MPH Brown /2018 Fall PHP 1100/Data analysis/project/data/Book2.xlsx", 
                                 sheet = "Sheet1")
 names(health_work_force )[1] <- c("location_name")
+
+#importing ART treatment data 
+ARTcov <- read_excel("~/Documents/MPH Brown /2018 Fall PHP 1100/Data analysis/project/HIV_0000000009,HIV_0000000010,HIV_0000000001,HIV_ARTCOVERAGE.xlsx", 
+                     sheet = "Sheet9", col_types = c("blank", 
+                                                     "text", "numeric", "numeric", "numeric"))
+names(ARTcov)[1] <- c("location_name")
 
 ```
 
@@ -42,10 +49,16 @@ merged <- left_join( x = GBD_HIV, y = health_work_force, by = "location_name" )
 merged_clean <- merged[complete.cases(merged),]
 names(merged_clean)[12] <- c("Nurses_midwives")
 names(merged_clean)[14] <- c("Doctors_equivalents")
-colnames(merged_clean)
+
+merged_clean2 <- left_join(merged_clean, ARTcov, by = "location_name")
+names(merged_clean2)[18] <- c("coverage")
+colnames(merged_clean2)
+
+
 ```
 ```{r}
 # descriptive analysis 
+
 
 
 
@@ -56,19 +69,43 @@ colnames(merged_clean)
 # correlation matrix 
 merged_corr <- merged_clean %>%
   select(location_id, measure_name, val,Doctors,Nurses_midwives, Total, Doctors_equivalents) %>%
-  spread(key = measure_name, val) %>%
- correlation_matrix <- round( cor(merged_corr), 3)
+  spread(key = measure_name, val) 
  
- corrplot(corr = correlation_matrix, method = "circle" )
+correlation_matrix <- round( cor(merged_corr), 3)
+
+merged_corr2 <- merged_clean2  %>%
+   select(location_id, measure_name, val,Doctors,Nurses_midwives, Total, coverage) %>%
+  spread(key = measure_name, val) %>%
+  filter( !is.na(coverage))
+
+correlation_matrix2 <- round( cor(merged_corr2), 3)
+
+# P-value matrix  
+ p.mat <- cor.mtest(merged_corr)
+ 
+# visualise correlation 
+ corrplot(corr = correlation_matrix, type = "full" ,
+          tl.col="black", tl.srt=45,
+          p.mat = p.mat, sig.level = 0.05, insig = "blank" )
+ 
+ corrplot(corr = correlation_matrix2, type = "full" ,
+          tl.col="black", tl.srt=45, tl.cex = 1,
+          p.mat = p.mat, sig.level = 0.05, insig = "blank" )
 
 # best fit scatter plot
-scatter_nurs_vs_mort <-  merged_clean %>%
-  filter(measure_name == "Deaths") %>%
-  ggscatter( y = "Nurses_midwives", x = "val",
-            add = "reg.line", conf.int = TRUE, 
-            cor.coef = TRUE, cor.method = "pearson",
-            ylab =  "Estimated Nurses & midwives Density per 1000", xlab = "HIV Mortality rate per 100 0000")
+ scatter_nurs_vs_mort <-  merged_clean %>%
+   filter(measure_name == "Deaths") %>%
+   ggscatter( x = "Nurses_midwives", y = "val",
+              add = "reg.line", conf.int = TRUE, 
+              cor.coef = TRUE, cor.method = "pearson",
+              xlab =  "Estimated Nurses & midwives Density per 1000", ylab = "HIV Mortality rate per 100 0000")
 
+ scatter_nurs_vs_cov <-  merged_clean2 %>%
+   filter(measure_name == "Deaths") %>%
+   ggscatter( x = "Nurses_midwives", y = "coverage",
+              add = "reg.line", conf.int = TRUE, 
+              cor.coef = TRUE, cor.method = "pearson",
+              xlab =  "Estimated Nurses & midwives Density per 1000", ylab = "ART coverage %")
 # correlation -test
 cor.test(merged_corr$Nurses_midwives, merged_corr$Deaths)
 ```
