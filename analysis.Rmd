@@ -43,6 +43,13 @@ names(merged_clean)[12] <- c("Nurses_midwives")
 names(merged_clean)[14] <- c("Doctors_equivalents")
 colnames(merged_clean)
 ```
+```{r}
+# descriptive analysis 
+
+
+
+```
+
 
 ```{r}
 # correlation matrix 
@@ -59,5 +66,6 @@ scatter_nurs_vs_mort <-  merged_clean %>%
             cor.coef = TRUE, cor.method = "pearson",
             ylab =  "Estimated Nurses & midwives Density per 1000", xlab = "HIV Mortality rate per 100 0000")
 
-
+# correlation -test
+cor.test(merged_corr$Nurses_midwives, merged_corr$Deaths)
 ```
