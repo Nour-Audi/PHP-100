@@ -45,19 +45,19 @@ colnames(merged_clean)
 ```
 
 ```{r}
-# correlation
+# correlation matrix 
 merged_corr <- merged_clean %>%
   select(location_id, measure_name, val,Doctors,Nurses_midwives, Total, Doctors_equivalents) %>%
   spread(key = measure_name, val)
- round( cor(merged_corr), 3)
+ correlation_matrix <- round( cor(merged_corr), 3)
 
-
-merged_clean %>%
+# best fit scatter plot
+scatter_nurs_vs_mort <-  merged_clean %>%
   filter(measure_name == "Deaths") %>%
-  ggscatter( x = "Nurses_midwives", y = "val",
+  ggscatter( y = "Nurses_midwives", x = "val",
             add = "reg.line", conf.int = TRUE, 
             cor.coef = TRUE, cor.method = "pearson",
-            xlab =  "Estimated Doctors Density per 1000", ylab = "HIV Mortality rate per 100 0000")
+            ylab =  "Estimated Nurses & midwives Density per 1000", xlab = "HIV Mortality rate per 100 0000")
 
 
 ```
