@@ -15,6 +15,7 @@ knitr::opts_chunk$set(echo = TRUE)
 library(readxl)
 library(tidyverse)
 library(ggpubr)
+library(corrplot)
 
 
 ```
@@ -55,8 +56,10 @@ colnames(merged_clean)
 # correlation matrix 
 merged_corr <- merged_clean %>%
   select(location_id, measure_name, val,Doctors,Nurses_midwives, Total, Doctors_equivalents) %>%
-  spread(key = measure_name, val)
+  spread(key = measure_name, val) %>%
  correlation_matrix <- round( cor(merged_corr), 3)
+ 
+ corrplot(corr = correlation_matrix, method = "circle" )
 
 # best fit scatter plot
 scatter_nurs_vs_mort <-  merged_clean %>%
