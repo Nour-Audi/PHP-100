@@ -85,6 +85,7 @@ merged_final2 <-  merged_final %>%
   spread(key = measure_name, val)  %>%
  left_join(  y = merged_clean2[,3:4], by = "location_id") %>%
    filter (! duplicated(location_id))
+names(merged_final2)[11] <- c("DALYs")
   
 graph2 <- ggplot(merged_final2, aes(x = nurses_midwives_shortage , y =  Deaths , label = location_name)) +
   geom_point() +
@@ -103,12 +104,18 @@ merged_corr <- merged_clean %>%
  
 correlation_matrix <- round( cor(merged_corr), 3)
 
-merged_final2_corr <- 
+
 
 merged_corr2 <- merged_clean2  %>%
    select(location_id, measure_name, val,Doctors,Nurses_midwives, Total, coverage) %>%
   spread(key = measure_name, val) %>%
   filter( !is.na(coverage))
+
+# final correlation after excluding NA rows 
+merged_final2_corr <- merged_final2[1:13]
+merged_final2_corr <- merged_final2_corr[complete.cases(merged_final2_corr), ]
+ 
+merged_final2_corr_matrix <- round(cor(merged_final2_corr), 3)
 
 #  export to csv
 write_csv(merged_corr2, path = "/Users/battou/Documents/MPH Brown /2018 Fall PHP 1100/Data analysis/project/data/results.csv")
@@ -119,6 +126,7 @@ correlation_matrix2 <- round( cor(merged_corr2), 3)
 # P-value matrix  
  p.mat <- cor.mtest(merged_corr)
  p.mat2 <- cor.mtest(merged_corr2)
+ p.mat3 <- cor.mtest(merged_final2_corr)
  
 # visualise correlation 
  corrplot(corr = correlation_matrix, type = "full" ,
@@ -127,7 +135,11 @@ correlation_matrix2 <- round( cor(merged_corr2), 3)
  
  corrplot(corr = correlation_matrix2, type = "upper" ,
           tl.col="black", tl.srt=45, tl.cex = 1,
-          p.mat = p.mat, sig.level = 0.05, insig = "blank" )
+          p.mat = p.mat2, sig.level = 0.05, insig = "blank" )
+ 
+ corrplot(corr = merged_final2_corr_matrix, type = "upper" ,method = "square",
+          tl.col="black", tl.srt=45, tl.cex = 1,
+          p.mat = p.mat3, sig.level = 0.1, insig = "blank")
 
 # best fit scatter plot
  scatter_nurs_vs_mort <-  merged_clean %>%
@@ -143,12 +155,24 @@ correlation_matrix2 <- round( cor(merged_corr2), 3)
               add = "reg.line", conf.int = TRUE, 
               cor.coef = TRUE, cor.method = "pearson",
               xlab =  "Estimated Nurses & midwives Density per 1000", ylab = "ART coverage %")
+ 
+ scatter_docshort_cov <- merged_final2 %>%
+   ggscatter( x = "doctors_shortage", y = "DALYs" , 
+              add = "reg.line", conf.int = TRUE, 
+              cor.coef = TRUE, cor.method = "pearson",
+              xlab =  "Estimated Doctors Shortage as Density per 1000", ylab = "number of DALYs") +
+   geom_point() +
+  geom_text(label = merged_final2$location_name, size = 3, check_overlap = TRUE, hjust = 0.1, nudge_x = 0.01)
+scatter_docshort_cov
+
 # correlation test
 cor.test(merged_corr$Nurses_midwives, merged_corr$Deaths)
 
 # linear model  
- lm <- lm( Deaths ~ Nurses_midwives 
-             , data = merged_corr2 )
+ lm <- lm( Deaths ~ Nurses_midwives
+             , data = merged_final2 )
  summary(lm)
-
+ 
+ lm_shortage <- lm(DALYs ~ doctors_shortage, data = merged_final2)
+summary(lm_shortage)
 ```
