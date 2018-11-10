@@ -40,6 +40,15 @@ ARTcov <- read_excel("~/Documents/MPH Brown /2018 Fall PHP 1100/Data analysis/pr
                                                      "text", "numeric", "numeric", "numeric"))
 names(ARTcov)[1] <- c("location_name")
 
+# imprting shortage
+shortage <- read_excel("~/Documents/MPH Brown /2018 Fall PHP 1100/Data analysis/project/data/Book2.xlsx", 
+                       sheet = "shortage")
+names(shortage)[1] <- c("location_name")
+names(shortage)[2] <- c("doctors_shortage")
+names(shortage)[3] <- c("nurses_midwives_shortage")
+names(shortage)[4] <- c("total_shortage")
+names(shortage)[5] <- c("doctors_equivalents_shortage")
+
 ```
 
 ```{r}
@@ -54,7 +63,8 @@ merged_clean2 <- left_join(merged_clean, ARTcov, by = "location_name")
 names(merged_clean2)[18] <- c("coverage")
 colnames(merged_clean2)
 
-
+# final merge with shortage data
+merged_final <- left_join(x = merged_clean2 , y = shortage , by = "location_name")
 ```
 ```{r}
 # descriptive analysis 
@@ -70,6 +80,18 @@ graph1 <- ggplot(merged_clean3, aes(x = Nurses_midwives, y =  coverage , label =
 graph1
 
 
+merged_final2 <-  merged_final %>%
+   select(location_id, measure_name, val,Doctors,Nurses_midwives, Total,Doctors_equivalents, coverage, doctors_shortage,  nurses_midwives_shortage, total_shortage, doctors_equivalents_shortage) %>%
+  spread(key = measure_name, val)  %>%
+ left_join(  y = merged_clean2[,3:4], by = "location_id") %>%
+   filter (! duplicated(location_id))
+  
+graph2 <- ggplot(merged_final2, aes(x = nurses_midwives_shortage , y =  Deaths , label = location_name)) +
+  geom_point() +
+  geom_text(size = 3, check_overlap = F, hjust = 0.1, nudge_x = 0.05)
+graph2
+
+
 ```
 
 
@@ -80,6 +102,8 @@ merged_corr <- merged_clean %>%
   spread(key = measure_name, val) 
  
 correlation_matrix <- round( cor(merged_corr), 3)
+
+merged_final2_corr <- 
 
 merged_corr2 <- merged_clean2  %>%
    select(location_id, measure_name, val,Doctors,Nurses_midwives, Total, coverage) %>%
