@@ -160,7 +160,7 @@ correlation_matrix2 <- round( cor(merged_corr2), 3)
    ggscatter( x = "doctors_shortage", y = "DALYs" , 
               add = "reg.line", conf.int = TRUE, 
               cor.coef = TRUE, cor.method = "pearson",
-              xlab =  "Estimated Doctors Shortage as Density per 1000", ylab = "number of DALYs") +
+              xlab =  "Estimated Doctors Shortage as Density per 1000 population", ylab = "number of DALYs") +
    geom_point() +
   geom_text(label = merged_final2$location_name, size = 3, check_overlap = TRUE, hjust = 0.1, nudge_x = 0.01)
 scatter_docshort_cov
