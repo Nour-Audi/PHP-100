@@ -119,6 +119,12 @@ correlation_matrix2 <- round( cor(merged_corr2), 3)
               add = "reg.line", conf.int = TRUE, 
               cor.coef = TRUE, cor.method = "pearson",
               xlab =  "Estimated Nurses & midwives Density per 1000", ylab = "ART coverage %")
-# correlation -test
+# correlation test
 cor.test(merged_corr$Nurses_midwives, merged_corr$Deaths)
+
+# linear model  
+ lm <- lm( Deaths ~ Nurses_midwives 
+             , data = merged_corr2 )
+ summary(lm)
+
 ```
