@@ -118,7 +118,7 @@ merged_final2_corr <- merged_final2_corr[complete.cases(merged_final2_corr), ]
 merged_final2_corr_matrix <- round(cor(merged_final2_corr), 3)
 
 #  export to csv
-write_csv(merged_corr2, path = "/Users/battou/Documents/MPH Brown /2018 Fall PHP 1100/Data analysis/project/data/results.csv")
+write_csv(merged_final2_corr, path = "/Users/battou/Documents/MPH Brown /2018 Fall PHP 1100/Data analysis/project/data/results.csv")
 
 correlation_matrix2 <- round( cor(merged_corr2), 3)
 
@@ -139,7 +139,10 @@ correlation_matrix2 <- round( cor(merged_corr2), 3)
  
  corrplot(corr = merged_final2_corr_matrix, type = "upper" ,method = "square",
           tl.col="black", tl.srt=45, tl.cex = 1,
-          p.mat = p.mat3, sig.level = 0.1, insig = "blank")
+          p.mat = p.mat3, sig.level = 0.05,)
+```
+
+```{r}
 
 # best fit scatter plot
  scatter_nurs_vs_mort <-  merged_clean %>%
@@ -162,8 +165,8 @@ correlation_matrix2 <- round( cor(merged_corr2), 3)
               cor.coef = TRUE, cor.method = "pearson",
               xlab =  "Estimated Doctors Shortage as Density per 1000 population", ylab = "number of DALYs") +
    geom_point() +
-  geom_text(label = merged_final2$location_name, size = 3, check_overlap = TRUE, hjust = 0.1, nudge_x = 0.01)
-scatter_docshort_cov
+   geom_text(label = merged_final2$location_name, size = 3, check_overlap = TRUE, hjust = 0.1, nudge_x = 0.01)
+ scatter_docshort_cov
 
 # correlation test
 cor.test(merged_corr$Nurses_midwives, merged_corr$Deaths)
@@ -175,4 +178,5 @@ cor.test(merged_corr$Nurses_midwives, merged_corr$Deaths)
  
  lm_shortage <- lm(DALYs ~ doctors_shortage, data = merged_final2)
 summary(lm_shortage)
+
 ```
