@@ -120,6 +120,10 @@ merged_final2_corr_matrix <- round(cor(merged_final2_corr), 3)
 #  export to csv
 write_csv(merged_final2_corr, path = "/Users/battou/Documents/MPH Brown /2018 Fall PHP 1100/Data analysis/project/data/results.csv")
 
+write_csv( as.data.frame( merged_final2_corr_matrix), path = "/Users/battou/Documents/MPH Brown /2018 Fall PHP 1100/Data analysis/project/data/results2.csv")
+
+write_csv(as.data.frame( p.mat3), path = "/Users/battou/Documents/MPH Brown /2018 Fall PHP 1100/Data analysis/project/data/results3.csv")
+
 correlation_matrix2 <- round( cor(merged_corr2), 3)
 
 
