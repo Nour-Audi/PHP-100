@@ -183,4 +183,6 @@ cor.test(merged_corr$Nurses_midwives, merged_corr$Deaths)
  lm_shortage <- lm(DALYs ~ doctors_shortage, data = merged_final2)
 summary(lm_shortage)
 
+stargazer(lm_shortage , type = "text")
+
 ```
