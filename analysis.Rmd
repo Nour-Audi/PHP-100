@@ -1,6 +1,6 @@
 ---
-title: "Untitled"
-author: "NAudi"
+title: "Healthcare work force shortage and the burden of HIV in sub-Saharan Africa"
+author: "MHD Nour Audi"
 date: "11/8/2018"
 output: word_document
 ---
@@ -16,6 +16,7 @@ library(readxl)
 library(tidyverse)
 library(ggpubr)
 library(corrplot)
+library(stargazer)
 
 
 ```
