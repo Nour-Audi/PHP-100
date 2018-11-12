@@ -18,13 +18,12 @@ library(ggpubr)
 library(corrplot)
 library(stargazer)
 
-
 ```
 
 ```{r}
 # importing data 
 
-GBD_HIV <- read_excel("/Users/battou/Documents/MPH Brown /2018 Fall PHP 1100/Data analysis/project/data/Book2.xlsx", 
+GBD_HIV <- read_excel("/Users/battou/Documents/MPH Brown /2018 Fall PHP 1100/Data analysis/project/PHP 1100/data/Book2.xlsx", 
                       sheet = "Sheet2", col_types = c("numeric", 
                                                       "text", "numeric", "text", "blank", 
                                                       "blank", "blank", "blank", "blank", 
@@ -36,13 +35,13 @@ health_work_force <- read_excel("/Users/battou/Documents/MPH Brown /2018 Fall PH
 names(health_work_force )[1] <- c("location_name")
 
 #importing ART treatment data 
-ARTcov <- read_excel("~/Documents/MPH Brown /2018 Fall PHP 1100/Data analysis/project/HIV_0000000009,HIV_0000000010,HIV_0000000001,HIV_ARTCOVERAGE.xlsx", 
+ARTcov <- read_excel("/Users/battou/Documents/MPH Brown /2018 Fall PHP 1100/Data analysis/project/PHP 1100/data/HIV_0000000009,HIV_0000000010,HIV_0000000001,HIV_ARTCOVERAGE.xlsx", 
                      sheet = "Sheet9", col_types = c("blank", 
                                                      "text", "numeric", "numeric", "numeric"))
 names(ARTcov)[1] <- c("location_name")
 
 # imprting shortage
-shortage <- read_excel("~/Documents/MPH Brown /2018 Fall PHP 1100/Data analysis/project/data/Book2.xlsx", 
+shortage <- read_excel("/Users/battou/Documents/MPH Brown /2018 Fall PHP 1100/Data analysis/project/data/Book2.xlsx", 
                        sheet = "shortage")
 names(shortage)[1] <- c("location_name")
 names(shortage)[2] <- c("doctors_shortage")
