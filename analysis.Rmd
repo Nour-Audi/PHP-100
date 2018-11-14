@@ -86,6 +86,7 @@ merged_final2 <-  merged_final %>%
  left_join(  y = merged_clean2[,3:4], by = "location_id") %>%
    filter (! duplicated(location_id))
 names(merged_final2)[11] <- c("DALYs")
+
   
 graph2 <- ggplot(merged_final2, aes(x = nurses_midwives_shortage , y =  Deaths , label = location_name)) +
   geom_point() +
@@ -164,7 +165,7 @@ cor.mtest <- function(mat, ...) {
  
  corrplot(corr = merged_final2_corr_matrix, type = "upper" ,method = "square",
           tl.col="black", tl.srt=45, tl.cex = 1,
-          p.mat = p.mat3, sig.level = 0.05,)
+          p.mat = p.mat3, sig.level = 0.05)
 ```
 
 ```{r}
@@ -185,13 +186,15 @@ cor.mtest <- function(mat, ...) {
               xlab =  "Estimated Nurses & midwives Density per 1000", ylab = "ART coverage %")
  
  scatter_docshort_cov <- merged_final2 %>%
-   ggscatter( x = "doctors_shortage", y = "DALYs" , 
+   mutate(doctors_shortage_seq = (doctors_shortage *10)^2) %>%
+   ggscatter( x = "doctors_shortage_seq", y = "DALYs" , 
               add = "reg.line", conf.int = TRUE, 
               cor.coef = TRUE, cor.method = "pearson",
-              xlab =  "Estimated Doctors Shortage as Density per 1000 population", ylab = "number of DALYs") +
+              xlab =  "Estimated Doctors Shortage as Density per 10 000 population", ylab = "number of DALYs") +
    geom_point() +
-   geom_text(label = merged_final2$location_name, size = 3, check_overlap = TRUE, hjust = 0.1, nudge_x = 0.01)
+   geom_text(label = merged_final2$location_name, size = 3, check_overlap = TRUE, hjust = 0.1, nudge_x = 0.5)
  scatter_docshort_cov
+ 
 
 # correlation test
 cor.test(merged_corr$Nurses_midwives, merged_corr$Deaths)
@@ -201,8 +204,19 @@ cor.test(merged_corr$Nurses_midwives, merged_corr$Deaths)
              , data = merged_final2 )
  summary(lm)
  
- lm_shortage <- lm(DALYs ~ doctors_shortage, data = merged_final2)
-summary(lm_shortage)
+ 
+# regress quadratic function of doctors shortage 
+ merged_final3 <- merged_final2 %>%
+   mutate(doctors_shortage2 = (doctors_shortage)^2)
+ 
+ lm_shortage <- lm(DALYs ~  doctors_shortage, data = na.omit( merged_final3))
+ prid <- predict(lm_shortage)
+
+ lm_shortage2 <- lm(DALYs ~  doctors_shortage2, data = na.omit( merged_final3))
+ prid2 <- predict(lm_shortage2)
+ summary(lm_shortage2)
+ 
+
 
 stargazer(lm_shortage , type = "text")
 
