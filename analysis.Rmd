@@ -209,9 +209,12 @@ cor.test(merged_corr$Nurses_midwives, merged_corr$Deaths)
  merged_final3 <- merged_final2 %>%
    mutate(doctors_shortage2 = (doctors_shortage)^2)
  
- lm_shortage2 <- lm(DALYs ~  doctors_shortage2, data =  merged_final3)
+ lm_shortage2 <- lm(DALYs ~  doctors_shortage2 + nurses_midwives_shortage + coverage + Deaths , data =  merged_final3)
  summary(lm_shortage2)
+ plot(lm_shortage2 )
+
  
 stargazer(lm_shortage2 , type = "text")
+
 
 ```
