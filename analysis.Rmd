@@ -205,7 +205,7 @@ cor.test(merged_corr$Nurses_midwives, merged_corr$Deaths)
  summary(lm)
  
  
-# regress quadratic function of doctors shortage 
+# regress linear function of doctors shortage 
  merged_final3 <- merged_final2 %>%
    mutate(doctors_shortage2 = (doctors_shortage )^2) 
    
